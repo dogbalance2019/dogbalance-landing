@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dog Balance — Guía de Alimentación Natural</title>
+<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;700&family=Montserrat:wght@400;500;600&family=Caveat:wght@500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --verde-bosque: #1B4D3E;
+    --verde-vital: #92C97A;
+    --ocre-tierra: #A67C52;
+    --crema: #F5F2E9;
+    --verde-bosque-claro: #234f40;
+    --verde-vital-hover: #7db868;
+  }
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: var(--verde-bosque);
+    min-height: 100vh;
+    color: var(--crema);
+    overflow-x: hidden;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    top: -120px; right: -120px;
+    width: 420px; height: 420px;
+    border-radius: 50%;
+    background: rgba(146,201,122,0.08);
+    pointer-events: none;
+  }
+  body::after {
+    content: '';
+    position: fixed;
+    bottom: -80px; left: -80px;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: rgba(166,124,82,0.07);
+    pointer-events: none;
+  }
+  header {
+    padding: 20px 40px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid rgba(245,242,233,0.1);
+  }
+  .logo-text {
+    font-family: 'Comfortaa', cursive;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--crema);
+    letter-spacing: 0.5px;
+  }
+  .logo-paw { font-size: 24px; }
+  .logo-tagline {
+    font-family: 'Caveat', cursive;
+    font-size: 13px;
+    color: var(--verde-vital);
+    margin-left: 4px;
+    margin-top: 2px;
+  }
+  .hero {
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 60px 40px 80px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+    min-height: calc(100vh - 65px);
+  }
+  .hero-left {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(146,201,122,0.15);
+    border: 1px solid rgba(146,201,122,0.35);
+    border-radius: 100px;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--verde-vital);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    width: fit-content;
+  }
+  h1 {
+    font-family: 'Comfortaa', cursive;
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--crema);
+  }
+  h1 span { color: var(--verde-vital); }
+  .subtitulo {
+    font-size: 16px;
+    line-height: 1.7;
+    color: rgba(245,242,233,0.8);
+  }
+  .dog-img-wrapper {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    max-height: 280px;
+  }
+  .dog-img-wrapper img {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+    display: block;
+  }
+  .dog-img-overlay {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: linear-gradient(transparent, rgba(27,77,62,0.92));
+    padding: 24px 20px 16px;
+  }
+  .dog-quote {
+    font-family: 'Caveat', cursive;
+    font-size: 17px;
+    color: var(--crema);
+  }
+  .trust {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .trust-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: rgba(245,242,233,0.75);
+  }
+  .trust-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--verde-vital);
+    flex-shrink: 0;
+  }
+  .form-card {
+    background: var(--crema);
+    border-radius: 24px;
+    padding: 36px 32px;
+    color: #1a1a1a;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.3);
+  }
+  .form-header {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+  .form-icon { font-size: 32px; display: block; margin-bottom: 10px; }
+  .form-title {
+    font-family: 'Comfortaa', cursive;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--verde-bosque);
+    margin-bottom: 6px;
+  }
+  .form-subtitle {
+    font-size: 13px;
+    color: #666;
+  }
+  .form-group {
+    margin-bottom: 16px;
+  }
+  .form-group label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--verde-bosque);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .form-group input {
+    width: 100%;
+    padding: 13px 16px;
+    border: 1.5px solid #ddd;
+    border-radius: 12px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    color: #1a1a1a;
+    background: white;
+    transition: border-color 0.2s;
+    outline: none;
+  }
+  .form-group input:focus {
+    border-color: var(--verde-vital);
+  }
+  .cta-btn {
+    width: 100%;
+    padding: 16px;
+    background: var(--verde-vital);
+    color: var(--verde-bosque);
+    border: none;
+    border-radius: 14px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    margin-top: 4px;
+    letter-spacing: 0.3px;
+  }
+  .cta-btn:hover { background: var(--verde-vital-hover); }
+  .cta-btn:active { transform: scale(0.98); }
+  .cta-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+  .form-privacy {
+    text-align: center;
+    font-size: 11px;
+    color: #888;
+    margin-top: 12px;
+  }
+  .social-proof {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+  }
+  .avatars { display: flex; }
+  .avatar {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700;
+    color: white;
+    margin-left: -8px;
+    border: 2px solid var(--crema);
+  }
+  .avatar:first-child { margin-left: 0; }
+  .social-text { font-size: 12px; color: #555; line-height: 1.4; }
+
+  /* ── ESTADO ÉXITO ── */
+  .success-state {
+    display: none;
+    text-align: center;
+    padding: 20px 0;
+  }
+  .success-icon { font-size: 52px; margin-bottom: 16px; }
+  .success-title {
+    font-family: 'Comfortaa', cursive;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--verde-bosque);
+    margin-bottom: 8px;
+  }
+  .success-subtitle {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+  .success-name {
+    color: var(--verde-bosque);
+    font-weight: 700;
+  }
+  .download-btn {
+    display: inline-block;
+    padding: 14px 28px;
+    background: var(--verde-bosque);
+    color: var(--crema);
+    border-radius: 14px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.2s;
+    margin-bottom: 12px;
+  }
+  .download-btn:hover { background: var(--verde-bosque-claro); }
+  .whatsapp-note {
+    font-size: 12px;
+    color: #666;
+    margin-top: 8px;
+  }
+
+  /* ── ERROR ── */
+  .error-msg {
+    display: none;
+    background: #fff0f0;
+    border: 1px solid #ffcccc;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 12px;
+    color: #cc3333;
+    margin-top: 10px;
+    text-align: center;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    header { padding: 16px 20px; }
+    .hero {
+      grid-template-columns: 1fr;
+      padding: 32px 20px 48px;
+      gap: 32px;
+      min-height: auto;
+    }
+    .form-card { padding: 28px 20px; }
+    h1 { font-size: 28px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="logo-paw">🐾</span>
+  <span class="logo-text">Dog Balance</span>
+  <span class="logo-tagline">La receta exacta de la naturaleza</span>
+</header>
+
+<section class="hero">
+
+  <div class="hero-left">
+    <span class="badge"><span>🌿</span> Guía gratuita de alimentación natural</span>
+    <h1>¿Sabes realmente qué come <span>tu perro?</span></h1>
+    <p class="subtitulo">Descarga gratis nuestra guía de alimentación natural y únete a la comunidad de dueños conscientes.</p>
+    <div class="dog-img-wrapper">
+      <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?w=800&q=80"
+           alt="Perro feliz y saludable Dog Balance"
+           onerror="this.style.background='#234f40'; this.style.height='280px';" />
+      <div class="dog-img-overlay">
+        <p class="dog-quote">"Comida real para compañeros de vida reales."</p>
+      </div>
+    </div>
+    <div class="trust">
+      <div class="trust-item"><span class="trust-dot"></span>100% ingredientes naturales</div>
+      <div class="trust-item"><span class="trust-dot"></span>Porciones exactas por perro</div>
+      <div class="trust-item"><span class="trust-dot"></span>Bogotá, Colombia</div>
+    </div>
+  </div>
+
+  <div>
+    <div class="form-card">
+
+      <!-- FORMULARIO -->
+      <div id="form-section">
+        <div class="form-header">
+          <span class="form-icon">📋</span>
+          <p class="form-title">Descarga tu guía gratuita</p>
+          <p class="form-subtitle">Solo necesitamos 3 datos para enviártela</p>
+        </div>
+
+        <div class="form-group">
+          <label for="nombre">Tu nombre</label>
+          <input type="text" id="nombre" placeholder="¿Cómo te llamamos?" autocomplete="given-name" />
+        </div>
+        <div class="form-group">
+          <label for="whatsapp">Tu WhatsApp</label>
+          <input type="tel" id="whatsapp" placeholder="+57 300 000 0000" autocomplete="tel" />
+        </div>
+        <div class="form-group">
+          <label for="perro">Nombre de tu perro</label>
+          <input type="text" id="perro" placeholder="¿Cómo se llama tu peludo?" />
+        </div>
+
+        <button class="cta-btn" id="submit-btn" onclick="enviarFormulario()">
+          🐾 Quiero la guía gratis
+        </button>
+
+        <div class="error-msg" id="error-msg">
+          Ocurrió un error. Por favor intenta de nuevo.
+        </div>
+
+        <p class="form-privacy">🔒 Tu información está segura. Sin spam, solo amor por los perros.</p>
+
+        <div class="social-proof">
+          <div class="avatars">
+            <div class="avatar" style="background:#1B4D3E;">CA</div>
+            <div class="avatar" style="background:#A67C52;">MR</div>
+            <div class="avatar" style="background:#3a6b5a;">JP</div>
+            <div class="avatar" style="background:#92C97A; color:#1B4D3E;">+</div>
+          </div>
+          <p class="social-text"><strong>+200 dueños</strong> ya descargaron<br>la guía este mes</p>
+        </div>
+      </div>
+
+      <!-- ESTADO ÉXITO -->
+      <div class="success-state" id="success-section">
+        <div class="success-icon">🎉</div>
+        <p class="success-title">¡Bienvenido/a a la comunidad!</p>
+        <p class="success-subtitle">
+          Hola <span class="success-name" id="success-nombre"></span>, tu guía está lista.<br>
+          <strong id="success-perro"></strong> va a agradecer esto. 🐾
+        </p>
+        <a href="https://drive.google.com/file/d/1I_YjAig78P9T33x2GQ8t26J-oiV3HM1J/view?usp=sharing" class="download-btn" id="pdf-link" target="_blank" rel="noopener">
+          📥 Descargar guía ahora
+        </a>
+        <p class="whatsapp-note">
+          📱 En los próximos minutos recibirás un mensaje de bienvenida en tu WhatsApp.
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+</section>
+
+<script>
+  // ── SUPABASE INIT ──
+  const { createClient } = supabase;
+  const SUPABASE_URL = 'https://xtqkjienwnonyjawrjqa.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh0cWtqaWVud25vbnlqYXdyanFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE1NDUwMDIsImV4cCI6MjA5NzEyMTAwMn0.GxRutuYwsqDNHOzL78IHPdVRZX4PWVDqoZbsQZFRlXA';
+  const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  async function enviarFormulario() {
+    const nombre   = document.getElementById('nombre').value.trim();
+    const whatsapp = document.getElementById('whatsapp').value.trim();
+    const perro    = document.getElementById('perro').value.trim();
+    const btn      = document.getElementById('submit-btn');
+    const errorMsg = document.getElementById('error-msg');
+
+    // Validación básica
+    if (!nombre || !whatsapp || !perro) {
+      errorMsg.textContent = 'Por favor completa todos los campos.';
+      errorMsg.style.display = 'block';
+      return;
+    }
+    if (whatsapp.length < 7) {
+      errorMsg.textContent = 'Por favor ingresa un número de WhatsApp válido.';
+      errorMsg.style.display = 'block';
+      return;
+    }
+
+    errorMsg.style.display = 'none';
+    btn.disabled = true;
+    btn.textContent = '⏳ Guardando...';
+
+    try {
+      const { error } = await db.from('leads').insert([{ nombre, whatsapp, perro }]);
+
+      if (error) throw error;
+
+      // Mostrar éxito
+      document.getElementById('success-nombre').textContent = nombre;
+      document.getElementById('success-perro').textContent = `¡${perro} merece lo mejor!`;
+      document.getElementById('form-section').style.display = 'none';
+      document.getElementById('success-section').style.display = 'block';
+
+    } catch (err) {
+      console.error(err);
+      errorMsg.textContent = 'Ocurrió un error. Por favor intenta de nuevo.';
+      errorMsg.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = '🐾 Quiero la guía gratis';
+    }
+  }
+
+  // Enter para enviar
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Enter') enviarFormulario();
+  });
+</script>
+
+</body>
+</html>
