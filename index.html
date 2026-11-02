@@ -591,7 +591,7 @@
     $('qz-rtext').textContent = r.x;
     $('qz-rscore').textContent = `Puntaje: ${total} / 18`;
     $('qz-rcta').textContent = r.c + ' →';
-    const msg = `Hola Dog Balance! Hice el quiz de ${perro} y mi resultado fue ${r.b}. Quiero saber más.`;
+    const msg = `Hola Dog Balance! Hice el quiz de ${perro} y mi resultado fue ${key}. Quiero saber más.`; // sin emoji: algunos WhatsApp lo convierten en �
     $('qz-rcta').href = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`;
     $('qz-prog').style.width = '100%';
     qzShow('qz-res');
