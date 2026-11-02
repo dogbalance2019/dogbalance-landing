@@ -491,9 +491,10 @@
   const db = createClient(SUPABASE_URL, SUPABASE_KEY);
   const WA_NUMBER = '573224090909'; // línea WhatsApp Business de Dog Balance
 
-  // Opciones en orden A,B,C,D => puntaje 3,2,1,0 (máximo 18)
+  // Opciones en orden A,B,C,D => puntaje 3,2,1,0 (máximo 18).
+  // Excepción: Alimentación usa su propio puntaje (pts): casera 3, mezcla 2, húmeda 1, concentrado 0.
   const QZ = [
-    {t:'Alimentación', q:'¿Qué come tu perro principalmente?', o:[['🥣','Concentrado seco (croquetas)'],['🥫','Comida húmeda de bolsa o lata'],['🍲','Comida casera o cocinada en casa'],['🔀','Una mezcla de varias']]},
+    {t:'Alimentación', q:'¿Qué come tu perro principalmente?', pts:[0,1,3,2], o:[['🥣','Concentrado seco (croquetas)'],['🥫','Comida húmeda de bolsa o lata'],['🍲','Comida casera o cocinada en casa'],['🔀','Una mezcla de varias']]},
     {t:'Hidratación', q:'¿Cómo describirías el acceso de tu perro al agua?', o:[['💧','Siempre tiene agua fresca disponible y lavo el plato todos los días'],['🚰','Tiene agua disponible, pero no siempre la cambio a diario'],['😅','A veces se me olvida revisar si tiene agua'],['🤷','Honestamente no sé cuánta toma']]},
     {t:'Peso y cuerpo', q:'Cuando pasas las manos por los costados de tu perro, ¿qué sientes?', o:[['✅','Siento las costillas fácilmente sin presionar'],['👐','Las siento, pero tengo que presionar un poco'],['🧸','No las siento aunque presione'],['🙈','Nunca lo he intentado']]},
     {t:'Energía y comportamiento', q:'¿Cómo describirías la energía de tu perro en el día a día?', o:[['⚡','Activo, juguetón, curioso'],['😌','Tranquilo pero responde bien cuando lo invito a jugar'],['🥱','Le cuesta levantarse o se cansa rápido'],['❓','Ha cambiado últimamente y no sé por qué']]},
@@ -543,8 +544,9 @@
     $('qz-prog').style.width = '0'; $('qz-count').textContent = ''; $('qz-pct').textContent = '';
     qzShow('qz-intro');
   }
+  function qzPts(n,k){ return QZ[n].pts ? QZ[n].pts[k] : 3 - k; }
   function qzCalc(){
-    const total = qans.reduce((s,k) => s + (3 - k), 0);
+    const total = qans.reduce((s,k,n) => s + qzPts(n,k), 0);
     return { total, key: total >= 14 ? 'verde' : total >= 7 ? 'amarillo' : 'rojo' };
   }
   // Normaliza a formato internacional Colombia: 57XXXXXXXXXX
@@ -568,7 +570,7 @@
     const { total, key } = qzCalc();
     const base = { nombre, whatsapp, perro };
     const extra = { quiz_puntaje: total, quiz_resultado: key,
-                    quiz_respuestas: qans.map((k,n) => ({ p:n+1, opcion:'ABCD'[k], puntos:3-k })) };
+                    quiz_respuestas: qans.map((k,n) => ({ p:n+1, opcion:'ABCD'[k], puntos:qzPts(n,k) })) };
     try {
       let r = await db.from('leads').insert([{ ...base, ...extra }]);
       if (r.error) r = await db.from('leads').insert([base]); // respaldo si aún no existen las columnas del quiz
