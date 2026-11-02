@@ -326,6 +326,44 @@
     .form-card { padding: 28px 20px; }
     h1 { font-size: 28px; }
   }
+
+  /* ── QUIZ ── */
+  .qz-top{display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:600;color:var(--ocre-tierra);margin-bottom:8px;min-height:16px}
+  .qz-bar{height:8px;background:#e6dfcc;border-radius:99px;overflow:hidden;margin-bottom:22px}
+  .qz-bar i{display:block;height:100%;width:0;background:var(--verde-vital);border-radius:99px;transition:width .5s cubic-bezier(.4,1.4,.6,1)}
+  .qz-screen{display:none;animation:qzin .45s ease}
+  .qz-screen.on{display:block}
+  @keyframes qzin{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  .qz-emoji{font-size:58px;text-align:center;display:block;animation:qzwag 1.6s ease-in-out infinite;transform-origin:50% 80%}
+  @keyframes qzwag{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(8deg)}}
+  .qz-tag{display:block;font-size:11px;font-weight:700;color:var(--ocre-tierra);text-transform:uppercase;letter-spacing:1.2px}
+  .qz-h{font-family:'Comfortaa',cursive;font-weight:700;color:var(--verde-bosque);line-height:1.3}
+  .qz-intro{text-align:center}
+  .qz-intro .qz-h{font-size:23px;margin:8px 0}
+  .qz-intro p{font-size:14px;color:#555;line-height:1.55}
+  .qz-hand{font-family:'Caveat',cursive;font-size:22px;color:var(--ocre-tierra);margin-top:6px}
+  .qz-q .qz-h{font-size:20px;margin:6px 0 18px}
+  .qz-opts{display:grid;gap:10px}
+  .qz-opt{display:flex;align-items:center;gap:14px;text-align:left;width:100%;background:#fff;border:2px solid #e6dfcc;border-radius:16px;padding:13px 14px;font:500 14px/1.35 'Montserrat',sans-serif;color:var(--verde-bosque);cursor:pointer;transition:.2s}
+  .qz-opt .ic{font-size:24px;flex:none;width:34px;text-align:center}
+  .qz-opt:hover{border-color:var(--verde-vital);transform:translateX(4px)}
+  .qz-opt.sel{background:var(--verde-vital);border-color:var(--verde-bosque);transform:scale(1.02)}
+  .qz-btn{display:block;width:100%;background:var(--verde-vital);color:var(--verde-bosque);border:0;border-radius:14px;padding:16px;font:700 15px 'Montserrat',sans-serif;cursor:pointer;margin-top:20px;transition:.2s;text-decoration:none;text-align:center}
+  .qz-btn:hover{background:var(--verde-vital-hover);transform:translateY(-2px)}
+  .qz-btn:disabled{opacity:.6;cursor:wait}
+  .qz-link{background:none;border:0;color:var(--ocre-tierra);font:600 13px 'Montserrat',sans-serif;cursor:pointer;margin:14px auto 0;display:block}
+  .qz-form{text-align:center}
+  .qz-form .qz-h{font-size:21px;margin:6px 0}
+  .qz-form .sub{font-size:13px;color:#555;line-height:1.5;margin-bottom:16px}
+  .qz-form .form-group{text-align:left}
+  .qz-err{display:none;background:#fff0f0;border:1px solid #ffcccc;border-radius:10px;padding:10px 14px;font-size:12px;color:#cc3333;margin-top:10px;text-align:center}
+  .qz-res{text-align:center}
+  .qz-badge{font-size:70px;display:block;animation:qzpop .6s cubic-bezier(.3,1.6,.5,1)}
+  @keyframes qzpop{from{transform:scale(.2);opacity:0}to{transform:none;opacity:1}}
+  .qz-hi{font-family:'Caveat',cursive;font-size:24px;color:var(--ocre-tierra)}
+  .qz-res .qz-h{font-size:21px;margin:6px 0 10px}
+  .qz-res p.t{font-size:14px;color:#444;line-height:1.6}
+  .qz-score{display:inline-block;margin-top:14px;background:#fff;border-radius:99px;padding:7px 16px;font-weight:600;font-size:13px;color:var(--verde-bosque)}
 </style>
 </head>
 <body>
@@ -347,13 +385,13 @@
 <section class="hero">
 
   <div class="hero-left">
-    <span class="badge"><span>🌿</span> Guía gratuita</span>
-    <h1>Tu perro, <span>sano y feliz</span></h1>
-    <p class="subtitulo-tips"><strong>20</strong> tips que todo dueño debería conocer</p>
-    <p class="subtitulo">Descarga gratis nuestra guía y únete a la comunidad de dueños conscientes.</p>
+    <span class="badge"><span>🐾</span> Quiz gratuito · 1 minuto</span>
+    <h1>¿Qué tan <span>saludable</span> está tu perro?</h1>
+    <p class="subtitulo-tips"><strong>6</strong> preguntas, un resultado hecho para tu peludo</p>
+    <p class="subtitulo">Responde el quiz, descubre qué señales vale la pena atender y únete a la comunidad de dueños conscientes.</p>
     <div class="dog-img-wrapper">
       <img src="perro.jpg"
-           alt="Dos bulldogs durmiendo juntos, portada de la guía Tu perro, sano y feliz"
+           alt="Dos bulldogs durmiendo juntos"
            onerror="this.style.background='#234f40'; this.style.height='300px';" />
       <svg class="dog-img-wave" viewBox="0 0 600 46" preserveAspectRatio="none" aria-hidden="true">
         <path d="M0,14 C150,-4 320,34 600,10 L600,46 L0,46 Z" fill="#1B4D3E"/>
@@ -371,67 +409,73 @@
   <div>
     <div class="form-card">
 
-      <!-- FORMULARIO -->
-      <div id="form-section">
-        <div class="form-header">
-          <span class="form-icon">📋</span>
-          <p class="form-title">Descarga tu guía gratuita</p>
-          <p class="form-subtitle">Solo necesitamos 3 datos para enviártela</p>
-        </div>
+      <div class="qz-top"><span id="qz-count"></span><span id="qz-pct"></span></div>
+      <div class="qz-bar"><i id="qz-prog"></i></div>
 
+      <!-- INTRO -->
+      <div class="qz-screen on qz-intro" id="qz-intro">
+        <span class="qz-emoji">🐶</span>
+        <span class="qz-tag" style="margin-top:8px">Quiz de 1 minuto</span>
+        <p class="qz-h" style="font-size:23px;margin:8px 0">¿Qué tan saludable está tu perro?</p>
+        <p>6 preguntas rápidas y un resultado personalizado.</p>
+        <p class="qz-hand">Sin respuestas malas, solo información 💚</p>
+        <button class="qz-btn" onclick="qzStart()">🐾 ¡Empezar el quiz!</button>
+      </div>
+
+      <!-- PREGUNTAS -->
+      <div class="qz-screen qz-q" id="qz-q">
+        <span class="qz-tag" id="qz-qtag"></span>
+        <p class="qz-h" id="qz-qtitle"></p>
+        <div class="qz-opts" id="qz-opts"></div>
+        <button class="qz-link" id="qz-back" onclick="qzPrev()">← Anterior</button>
+      </div>
+
+      <!-- DATOS -->
+      <div class="qz-screen qz-form" id="qz-form">
+        <span class="qz-emoji" style="font-size:48px">🎉</span>
+        <p class="qz-h">¡Listo! Tu resultado está preparado</p>
+        <p class="sub">Déjanos tus datos para mostrártelo y escribirte por WhatsApp con tips para tu perro.</p>
         <div class="form-group">
           <label for="nombre">Tu nombre</label>
           <input type="text" id="nombre" placeholder="¿Cómo te llamamos?" autocomplete="given-name" />
         </div>
         <div class="form-group">
           <label for="whatsapp">Tu WhatsApp</label>
-          <input type="tel" id="whatsapp" placeholder="+57 300 000 0000" autocomplete="tel" />
+          <input type="tel" id="whatsapp" placeholder="300 000 0000" autocomplete="tel" />
         </div>
         <div class="form-group">
           <label for="perro">Nombre de tu perro</label>
           <input type="text" id="perro" placeholder="¿Cómo se llama tu peludo?" />
         </div>
-
-        <button class="cta-btn" id="submit-btn" onclick="enviarFormulario()">
-          🐾 Quiero la guía gratis
-        </button>
-
-        <div class="error-msg" id="error-msg">
-          Ocurrió un error. Por favor intenta de nuevo.
-        </div>
-
+        <button class="qz-btn" id="qz-send" style="margin-top:4px" onclick="qzEnviar()">Ver el resultado de mi perro</button>
+        <div class="qz-err" id="qz-err"></div>
         <p class="form-privacy">🔒 Tu información está segura. Sin spam, solo amor por los perros.</p>
-
-        <div class="social-proof">
-          <div class="avatars">
-            <div class="avatar" style="background:#92C97A; width:40px; height:40px;">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="#1B4D3E" aria-hidden="true">
-                <ellipse cx="5.2" cy="10.4" rx="2.1" ry="2.8" transform="rotate(-18 5.2 10.4)"/>
-                <ellipse cx="9.6" cy="5.8" rx="2.2" ry="3"/>
-                <ellipse cx="14.4" cy="5.8" rx="2.2" ry="3"/>
-                <ellipse cx="18.8" cy="10.4" rx="2.1" ry="2.8" transform="rotate(18 18.8 10.4)"/>
-                <path d="M12 11.2c-3 0-6 3.1-6 6 0 2 1.5 3.3 3.3 3.3 1.1 0 1.8-.5 2.7-.5s1.6.5 2.7.5c1.8 0 3.3-1.3 3.3-3.3 0-2.9-3-6-6-6z"/>
-              </svg>
-            </div>
-          </div>
-          <p class="social-text"><strong>7 años</strong> cocinando comida real<br>para perros en Bogotá</p>
-        </div>
       </div>
 
-      <!-- ESTADO ÉXITO -->
-      <div class="success-state" id="success-section">
-        <div class="success-icon">🎉</div>
-        <p class="success-title">¡Bienvenido/a a la comunidad!</p>
-        <p class="success-subtitle">
-          Hola <span class="success-name" id="success-nombre"></span>, tu guía está lista.<br>
-          <strong id="success-perro"></strong> va a agradecer esto. 🐾
-        </p>
-        <a href="https://drive.google.com/file/d/1iypW7H3SmjdAks1DP9XrUO_F2Szdb216/view?usp=sharing" class="download-btn" id="pdf-link" target="_blank" rel="noopener">
-          📥 Descargar guía ahora
-        </a>
-        <p class="whatsapp-note">
-          📱 En los próximos minutos recibirás un mensaje de bienvenida en tu WhatsApp.
-        </p>
+      <!-- RESULTADO -->
+      <div class="qz-screen qz-res" id="qz-res">
+        <span class="qz-badge" id="qz-rbadge"></span>
+        <p class="qz-hi" id="qz-rhi"></p>
+        <p class="qz-h" id="qz-rtitle"></p>
+        <p class="t" id="qz-rtext"></p>
+        <span class="qz-score" id="qz-rscore"></span>
+        <a class="qz-btn" id="qz-rcta" target="_blank" rel="noopener"></a>
+        <button class="qz-link" onclick="qzReset()">↺ Repetir el quiz con otro perro</button>
+      </div>
+
+      <div class="social-proof">
+        <div class="avatars">
+          <div class="avatar" style="background:#92C97A; width:40px; height:40px;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="#1B4D3E" aria-hidden="true">
+              <ellipse cx="5.2" cy="10.4" rx="2.1" ry="2.8" transform="rotate(-18 5.2 10.4)"/>
+              <ellipse cx="9.6" cy="5.8" rx="2.2" ry="3"/>
+              <ellipse cx="14.4" cy="5.8" rx="2.2" ry="3"/>
+              <ellipse cx="18.8" cy="10.4" rx="2.1" ry="2.8" transform="rotate(18 18.8 10.4)"/>
+              <path d="M12 11.2c-3 0-6 3.1-6 6 0 2 1.5 3.3 3.3 3.3 1.1 0 1.8-.5 2.7-.5s1.6.5 2.7.5c1.8 0 3.3-1.3 3.3-3.3 0-2.9-3-6-6-6z"/>
+            </svg>
+          </div>
+        </div>
+        <p class="social-text"><strong>7 años</strong> cocinando comida real<br>para perros en Bogotá</p>
       </div>
 
     </div>
@@ -445,53 +489,115 @@
   const SUPABASE_URL = 'https://pchvosjqxnnzcykxwdyh.supabase.co';
   const SUPABASE_KEY = 'sb_publishable_fFkd_vr-oHj1UiXwHdROpg_1ybuEq7C';
   const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+  const WA_NUMBER = '573224090909'; // línea WhatsApp Business de Dog Balance
 
-  async function enviarFormulario() {
-    const nombre   = document.getElementById('nombre').value.trim();
-    const whatsapp = document.getElementById('whatsapp').value.trim();
-    const perro    = document.getElementById('perro').value.trim();
-    const btn      = document.getElementById('submit-btn');
-    const errorMsg = document.getElementById('error-msg');
+  // Opciones en orden A,B,C,D => puntaje 3,2,1,0 (máximo 18)
+  const QZ = [
+    {t:'Alimentación', q:'¿Qué come tu perro principalmente?', o:[['🥣','Concentrado seco (croquetas)'],['🥫','Comida húmeda de bolsa o lata'],['🍲','Comida casera o cocinada en casa'],['🔀','Una mezcla de varias']]},
+    {t:'Hidratación', q:'¿Cómo describirías el acceso de tu perro al agua?', o:[['💧','Siempre tiene agua fresca disponible y lavo el plato todos los días'],['🚰','Tiene agua disponible, pero no siempre la cambio a diario'],['😅','A veces se me olvida revisar si tiene agua'],['🤷','Honestamente no sé cuánta toma']]},
+    {t:'Peso y cuerpo', q:'Cuando pasas las manos por los costados de tu perro, ¿qué sientes?', o:[['✅','Siento las costillas fácilmente sin presionar'],['👐','Las siento, pero tengo que presionar un poco'],['🧸','No las siento aunque presione'],['🙈','Nunca lo he intentado']]},
+    {t:'Energía y comportamiento', q:'¿Cómo describirías la energía de tu perro en el día a día?', o:[['⚡','Activo, juguetón, curioso'],['😌','Tranquilo pero responde bien cuando lo invito a jugar'],['🥱','Le cuesta levantarse o se cansa rápido'],['❓','Ha cambiado últimamente y no sé por qué']]},
+    {t:'Salud visible', q:'¿Cuándo fue la última vez que revisaste su pelaje, dientes o encías?', o:[['✨','Lo hago regularmente, todo se ve bien'],['🔍','Lo hago de vez en cuando'],['⏳','Hace tiempo que no lo reviso'],['🙊','Nunca lo he hecho conscientemente']]},
+    {t:'Veterinario', q:'¿Con qué frecuencia llevas a tu perro al veterinario?', o:[['🩺','Una vez al año o más'],['📅','Cada dos años aproximadamente'],['🚑','Solo cuando algo parece mal'],['🕰️','Hace mucho que no va']]}
+  ];
+  const QZR = {
+    verde:{b:'🟢', t:'Tu perro tiene una base sólida', x:'Estás haciendo más cosas bien de lo que crees. Hay uno o dos hábitos que, si los ajustas, pueden marcar una diferencia real en su energía y longevidad. Aquí te contamos cuáles.', c:'Conoce cómo la comida natural puede llevar esa base al siguiente nivel'},
+    amarillo:{b:'🟡', t:'Tu perro está bien, pero hay señales que vale la pena atender', x:'Tu perro no está en riesgo, pero algunas respuestas nos dicen que hay áreas donde su cuerpo podría estar trabajando más de lo necesario. La buena noticia: son hábitos fáciles de cambiar.', c:'Descubre qué ajuste simple puede cambiar cómo se ve y cómo se siente tu perro'},
+    rojo:{b:'🔴', t:'Tu perro merece más atención de la que está recibiendo', x:'No es un juicio — es información. Muchos dueños no saben lo que no saben. Estas respuestas nos dicen que hay algunos cambios que podrían hacer una diferencia importante en la calidad de vida de tu perro, y ninguno es complicado.', c:'Empieza por lo más importante: lo que come todos los días'}
+  };
 
-    // Validación básica
-    if (!nombre || !whatsapp || !perro) {
-      errorMsg.textContent = 'Por favor completa todos los campos.';
-      errorMsg.style.display = 'block';
-      return;
-    }
-    if (whatsapp.length < 7) {
-      errorMsg.textContent = 'Por favor ingresa un número de WhatsApp válido.';
-      errorMsg.style.display = 'block';
-      return;
-    }
+  let qi = 0, qans = [];
+  const $ = id => document.getElementById(id);
+  function qzShow(id){ document.querySelectorAll('.qz-screen').forEach(s => s.classList.remove('on')); $(id).classList.add('on'); }
+  function qzProg(){
+    const pct = Math.round(qi / QZ.length * 100);
+    $('qz-prog').style.width = pct + '%';
+    $('qz-count').textContent = qi < QZ.length ? `Pregunta ${qi+1} de ${QZ.length}` : '';
+    $('qz-pct').textContent = qi < QZ.length && qi > 0 ? pct + '%' : '';
+  }
+  function qzStart(){ qi = 0; qans = []; qzRender(); }
+  function qzRender(){
+    qzProg();
+    const d = QZ[qi];
+    $('qz-qtag').textContent = `P${qi+1} · ${d.t}`;
+    $('qz-qtitle').textContent = d.q;
+    $('qz-opts').innerHTML = d.o.map((o,k) =>
+      `<button class="qz-opt ${qans[qi]===k?'sel':''}" onclick="qzPick(${k},this)"><span class="ic">${o[0]}</span><span>${o[1]}</span></button>`).join('');
+    $('qz-back').style.visibility = qi ? 'visible' : 'hidden';
+    qzShow('qz-q');
+  }
+  function qzPick(k, el){
+    qans[qi] = k; el.classList.add('sel');
+    setTimeout(() => {
+      qi++;
+      if (qi < QZ.length) qzRender();
+      else { $('qz-prog').style.width = '100%'; $('qz-count').textContent = ''; $('qz-pct').textContent = ''; qzShow('qz-form'); }
+    }, 380);
+  }
+  function qzPrev(){ if (qi > 0) { qi--; qzRender(); } }
+  function qzReset(){
+    qi = 0; qans = [];
+    ['nombre','whatsapp','perro'].forEach(id => $(id).value = '');
+    $('qz-send').disabled = false; $('qz-send').textContent = 'Ver el resultado de mi perro';
+    $('qz-err').style.display = 'none';
+    $('qz-prog').style.width = '0'; $('qz-count').textContent = ''; $('qz-pct').textContent = '';
+    qzShow('qz-intro');
+  }
+  function qzCalc(){
+    const total = qans.reduce((s,k) => s + (3 - k), 0);
+    return { total, key: total >= 14 ? 'verde' : total >= 7 ? 'amarillo' : 'rojo' };
+  }
+  // Normaliza a formato internacional Colombia: 57XXXXXXXXXX
+  function qzTel(raw){
+    let d = raw.replace(/\D/g, '');
+    if (d.length === 10) d = '57' + d;
+    return d;
+  }
 
-    errorMsg.style.display = 'none';
-    btn.disabled = true;
-    btn.textContent = '⏳ Guardando...';
+  async function qzEnviar(){
+    const nombre = $('nombre').value.trim();
+    const whatsapp = qzTel($('whatsapp').value);
+    const perro = $('perro').value.trim();
+    const err = $('qz-err'), btn = $('qz-send');
 
+    if (!nombre || !perro) { err.textContent = 'Por favor completa todos los campos.'; err.style.display = 'block'; return; }
+    if (whatsapp.length < 10) { err.textContent = 'Por favor ingresa un número de WhatsApp válido.'; err.style.display = 'block'; return; }
+
+    err.style.display = 'none';
+    btn.disabled = true; btn.textContent = '⏳ Guardando...';
+    const { total, key } = qzCalc();
+    const base = { nombre, whatsapp, perro };
+    const extra = { quiz_puntaje: total, quiz_resultado: key,
+                    quiz_respuestas: qans.map((k,n) => ({ p:n+1, opcion:'ABCD'[k], puntos:3-k })) };
     try {
-      const { error } = await db.from('leads').insert([{ nombre, whatsapp, perro }]);
-
-      if (error) throw error;
-
-      // Mostrar éxito
-      document.getElementById('success-nombre').textContent = nombre;
-      document.getElementById('success-perro').textContent = `¡${perro} merece lo mejor!`;
-      document.getElementById('form-section').style.display = 'none';
-      document.getElementById('success-section').style.display = 'block';
-
-    } catch (err) {
-      console.error(err);
-      errorMsg.textContent = 'Ocurrió un error. Por favor intenta de nuevo.';
-      errorMsg.style.display = 'block';
-      btn.disabled = false;
-      btn.textContent = '🐾 Quiero la guía gratis';
+      let r = await db.from('leads').insert([{ ...base, ...extra }]);
+      if (r.error) r = await db.from('leads').insert([base]); // respaldo si aún no existen las columnas del quiz
+      if (r.error) throw r.error;
+      qzMostrar(nombre, perro, total, key);
+    } catch (e) {
+      console.error(e);
+      err.textContent = 'Ocurrió un error. Por favor intenta de nuevo.'; err.style.display = 'block';
+      btn.disabled = false; btn.textContent = 'Ver el resultado de mi perro';
     }
   }
 
-  // Enter para enviar
+  function qzMostrar(nombre, perro, total, key){
+    const r = QZR[key];
+    $('qz-rbadge').textContent = r.b;
+    $('qz-rhi').textContent = `${nombre}, esto es lo que vimos de ${perro}`;
+    $('qz-rtitle').textContent = r.t;
+    $('qz-rtext').textContent = r.x;
+    $('qz-rscore').textContent = `Puntaje: ${total} / 18`;
+    $('qz-rcta').textContent = r.c + ' →';
+    const msg = `Hola Dog Balance! Hice el quiz de ${perro} y mi resultado fue ${r.b}. Quiero saber más.`;
+    $('qz-rcta').href = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`;
+    $('qz-prog').style.width = '100%';
+    qzShow('qz-res');
+  }
+
+  // Enter envía solo cuando se está en el formulario de datos
   document.addEventListener('keydown', e => {
-    if (e.key === 'Enter') enviarFormulario();
+    if (e.key === 'Enter' && $('qz-form').classList.contains('on')) qzEnviar();
   });
 </script>
 
